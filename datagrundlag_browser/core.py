@@ -355,7 +355,8 @@ def geometry_types():
     gt = getattr(Qgis, "GeometryType", None)
     if gt is not None:
         return gt.Polygon, gt.Line, gt.Point
-    return QgsWkbTypes.PolygonGeometry, QgsWkbTypes.LineGeometry, QgsWkbTypes.PointGeometry
+    return (QgsWkbTypes.GeometryType.PolygonGeometry, QgsWkbTypes.GeometryType.LineGeometry,
+            QgsWkbTypes.GeometryType.PointGeometry)
 
 
 def set_metadata(lyr, collection_id, info):
