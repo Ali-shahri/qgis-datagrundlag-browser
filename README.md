@@ -12,7 +12,7 @@ Søg i 553 danske grunddata-datasæt fra [datagrundlag.dk](https://datagrundlag.
 
 - **Find data hurtigt** – 553 datasæt grupperet efter kilde (BBR, GeoDanmark …) eller tema (natur, planer, ejendomme …). Søgefeltet filtrerer med det samme.
 - **Se, hvad du får** – beskrivelse, antal rækker, dato for de nyeste data, og om det er et kortlag eller en tabel.
-- **Startpakker** – tilføj et helt basiskort, natur og beskyttelse, grundvand og jordforurening, planer eller kulturarv med ét klik.
+- **Startpakker** – tilføj et helt basiskort, natur og beskyttelse, grundvand og jordforurening, planer eller kulturarv med ét klik – for hele landet eller kun dit kortudsnit.
 - **Lag, der ser færdige ud** – GeoDanmark i Klimadatastyrelsens skærmkort-farver (vand er blå, skov er grøn …), GeoFA med de officielle GeoFA-symboler, Natura 2000 skraveret, kommunegrænser med navne. Alle lag lægges i gruppen *Datagrundlag* med beskrivelse og kilde i lagets metadata.
 - **Store datasæt uden ventetid** – hent kun dit kortudsnit, eller tilføj det hele, så det først vises, når du zoomer ind.
 - **BBR som punkter** – BBR-bygninger og tekniske anlæg (der kun har koordinater som tekst) bliver til punkter for dit kortudsnit.

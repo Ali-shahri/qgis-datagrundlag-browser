@@ -556,13 +556,18 @@ class DatagrundlagDock(QDockWidget):
         self.info_meta.setText(f"{len(layers)} lag i deres egen gruppe, klar til brug<ul style='margin:2px 0 0 -20px'>"
                                f"{names}</ul>")
         self.info_note.hide()
-        self.info_desc.setPlainText(desc + "\n\nStore lag (fx bygninger og veje) vises først, når du zoomer "
-                                    "ind til 1:50.000 eller tættere, så QGIS forbliver hurtig.")
+        self.info_desc.setPlainText(
+            desc + "\n\nHele landet: store lag (fx bygninger og veje) vises først, når du zoomer ind til "
+            "1:50.000 eller tættere.\nKun dit kortudsnit: vælg det via pilen ved knappen – lagene hentes "
+            "i baggrunden og vises med det samme.")
         self.btn_add.setText(f"  Tilføj pakken ({len(layers)} lag)")
         self.btn_add.setEnabled(True)
-        self.btn_add.setToolTip("")
-        for a in (self.act_full, self.act_extent, self.act_date):
-            a.setEnabled(False)
+        self.btn_add.setToolTip("Hele landet. Brug pilen for kun at hente dit kortudsnit.")
+        self.act_full.setText("Tilføj hele pakken (hele landet)")
+        self.act_extent.setText("Tilføj pakken – kun mit kortudsnit")
+        self.act_full.setEnabled(True)
+        self.act_extent.setEnabled(True)
+        self.act_date.setEnabled(False)
 
     def _update_add_button(self, info, selected=False):
         b = self.btn_add
@@ -591,6 +596,8 @@ class DatagrundlagDock(QDockWidget):
         b.setText("  " + text)
         b.setEnabled(enabled)
         b.setToolTip(tip)
+        self.act_full.setText("Tilføj hele datasættet")
+        self.act_extent.setText("Tilføj kun mit kortudsnit")
         self.act_full.setEnabled(can_full)
         self.act_extent.setEnabled(can_extent)
         self.act_date.setEnabled(can_date)
@@ -630,8 +637,10 @@ class DatagrundlagDock(QDockWidget):
         self.tree.setCurrentItem(item)
         if is_package(data[0]):
             m = QMenu(self.tree)
-            a = m.addAction(own_icon("pakke"), self.btn_add.text().strip())
-            a.triggered.connect(lambda _c=False: self._add_default())
+            a = m.addAction(own_icon("pakke"), self.act_full.text())
+            a.triggered.connect(lambda _c=False: self._add_package(data[0]))
+            b = m.addAction(icon("/mActionZoomActual.svg"), self.act_extent.text())
+            b.triggered.connect(lambda _c=False: self._add_package_extent(data[0]))
             m.exec(self.tree.viewport().mapToGlobal(pos))
             return
         self._build_menu(data[0]).exec(self.tree.viewport().mapToGlobal(pos))
@@ -672,14 +681,14 @@ class DatagrundlagDock(QDockWidget):
     # ======================================================================
     # Tilføj data
     # ======================================================================
-    def _with_info(self, then):
+    def _with_info(self, then, package=None):
         """Sørg for at info er hentet, før der tilføjes (henter i baggrunden ved behov)."""
         data = self._selected()
         if not data:
             return
         cid = data[0]
         if is_package(cid):
-            self._add_package(cid)
+            (package or self._add_package)(cid)
             return
         if cid in self._info:
             then(cid, data[1], self._info[cid])
@@ -706,7 +715,7 @@ class DatagrundlagDock(QDockWidget):
                 self._start_points(cid, title, info)
             else:
                 self._start_extent(cid, title, info)
-        self._with_info(go)
+        self._with_info(go, package=self._add_package_extent)
 
     def _add_from_date(self):
         self._with_info(self._ask_date)
@@ -885,6 +894,66 @@ class DatagrundlagDock(QDockWidget):
             self.iface.messageBar().pushMessage(
                 "Datagrundlag Browser", f"{name} er tilføjet. Zoom ind til 1:50.000 eller tættere for at se "
                 "de store lag (fx bygninger og veje).", level=Qgis.MessageLevel.Success, duration=8)
+
+    def _add_package_extent(self, cid):
+        """Hent alle pakkens lag for kortudsnittet i baggrunden og læg dem i rækkefølge."""
+        key, name, _desc, layers = self._package(cid)
+        rect = self._extent_25832()
+        area = rect.width() * rect.height() / 1e6
+        if area > MAX_POINT_AREA_KM2:
+            self._fail(f"Kortudsnittet er for stort ({area:,.0f} km²) til at hente en hel pakke. Zoom ind til "
+                       f"højst ca. 50 × 50 km – fx en by eller en kommune.".replace(",", "."))
+            return
+        jobs = []
+        for lcid, _guard in layers:
+            try:
+                jobs.append((lcid, core.resolve(lcid)))
+            except Exception as e:  # noqa: BLE001
+                self._fail(f"{core.short_title(self._titles.get(lcid, lcid))}: {e}")
+        if not jobs:
+            return
+        results, errors = {}, []
+
+        def finished():
+            group = core.project_group(f"{name} (kortudsnit)")
+            pos, total = 0, 0
+            for lcid, urls in jobs:
+                task = results.get(lcid)
+                if task is None or not task.features:
+                    continue
+                title = self._titles.get(lcid, lcid)
+                lyr = task.build_layer(core.layer_name(lcid, title, urls["snapshot_date"], "kortudsnit"))
+                core.finish_layer(lyr, lcid, {"title": title, "description": ""}, urls["snapshot_date"],
+                                  copy=True, group=group, position=pos)
+                pos += 1
+                total += len(task.features)
+            antal = f"{total:,}".replace(",", ".")
+            self.status.setText(f"✓ Tilføjede {name} for dit kortudsnit ({pos} lag, {antal} objekter)")
+            if errors:
+                self._fail("Nogle lag kunne ikke hentes: " + "; ".join(errors))
+            else:
+                self._tell_temporary()
+
+        def make_done(lcid):
+            def done(task, ok):
+                self._tasks.discard(task)
+                if ok:
+                    results[lcid] = task
+                else:
+                    errors.append(f"{core.short_title(self._titles.get(lcid, lcid))}: "
+                                  f"{task.error or 'annulleret'}")
+                n = len(results) + len(errors)
+                self.status.setText(f"Henter {name} for dit kortudsnit … {n}/{len(jobs)} lag færdige")
+                if n == len(jobs):
+                    finished()
+            return done
+
+        for lcid, urls in jobs:
+            task = ExtentCopyTask(f"Datagrundlag: {core.short_title(self._titles.get(lcid, lcid))} (kortudsnit)",
+                                  core.gdal_source(urls), rect, make_done(lcid))
+            self._tasks.add(task)
+            QgsApplication.taskManager().addTask(task)
+        self.status.setText(f"Henter {name} for dit kortudsnit … 0/{len(jobs)} lag færdige")
 
     def _done(self, cid, msg):
         self._remember(cid)
