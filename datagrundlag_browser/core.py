@@ -81,6 +81,59 @@ def resolve(collection_id, date=None, fetch=_default_fetch):
     }
 
 
+SOURCE_LABELS = {
+    "bbr": "BBR – bygninger og boliger",
+    "cvr": "CVR – virksomheder",
+    "dagi": "DAGI – administrative grænser",
+    "danmarksarealinformation": "Danmarks Arealinformation",
+    "dar": "DAR – adresser",
+    "dkjord": "Jordforurening",
+    "geodanmark": "GeoDanmark",
+    "geofa": "GeoFA – kommunale fagdata",
+    "geus": "Jupiter – boringer (GEUS)",
+    "grukos": "GRUKOS – grundvand",
+    "jordbrugsanalyser": "Jordbrugsanalyser",
+    "kulturarvsstyrelsen": "Kulturarv",
+    "kystatlas": "Kystatlas",
+    "landbrugsdrift": "Landbrugsdrift",
+    "matrikel": "Matriklen",
+    "naturdatabasen": "Naturdatabasen",
+    "plandatadk": "Plandata.dk – planer",
+    "puls": "PULS – miljøtilsyn",
+    "redningsnumre": "Redningsnumre",
+    "stednavne": "Stednavne",
+    "vejdirektoratet": "Vejdirektoratet",
+}
+
+
+def source_label(collection_id):
+    schema = collection_id.split(".", 1)[0]
+    return SOURCE_LABELS.get(schema, schema)
+
+
+def short_title(title):
+    """'BBR – Bygninger' -> 'Bygninger' (kilden står allerede i gruppen)."""
+    return title.split(" – ", 1)[1] if " – " in title else title
+
+
+def dataset_info(collection_id, fetch=_default_fetch):
+    """Beskrivelse, snapshots og om datasættet har geometri."""
+    d = collection_dir(collection_id)
+    coll = fetch(d + "collection.json")
+    latest = fetch(d + "latest.json")
+    dates = sorted(
+        lnk["href"].split("_gc2_snapshot_date=")[1].split("/")[0]
+        for lnk in coll.get("links", []) if lnk.get("rel") == "item"
+    )
+    return {
+        "title": coll.get("title", collection_id),
+        "description": coll.get("description", ""),
+        "snapshots": dates,
+        "latest": latest.get("snapshot_date"),
+        "has_geometry": "flatgeobuf" in latest.get("assets", {}),
+    }
+
+
 def gdal_source(urls):
     """GDAL-sti: FlatGeobuf hvis muligt (rumligt indeks), ellers GeoParquet."""
     return "/vsicurl/" + (urls["fgb"] or urls["parquet"])

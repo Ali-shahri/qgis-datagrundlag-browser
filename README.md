@@ -28,8 +28,10 @@ Så længe pluginet er markeret som eksperimentelt, skal **Vis også eksperiment
 ## Brug
 
 1. Klik på den blå database-knap i værktøjslinjen, eller vælg **Web → Datagrundlag Browser**.
-2. Skriv i søgefeltet og dobbeltklik på et datasæt.
-3. Zoom ind på dit område, før du tilføjer store landsdækkende datasæt. QGIS henter kun de features, der er i kortudsnittet.
+2. Datasættene er grupperet efter kilde (BBR, GeoDanmark, Plandata.dk …). Skriv i søgefeltet for at filtrere.
+3. Klik på et datasæt for at se beskrivelse, nyeste snapshot og om det kan vises på kortet.
+4. Dobbeltklik, eller klik **Tilføj til kortet**.
+5. Zoom ind på dit område, før du tilføjer store landsdækkende datasæt. QGIS henter kun de features, der er i kortudsnittet.
 
 Lagene gemmes i projektet som almindelige lag. Brug **Opdatér alle lag til nyeste**, når du åbner projektet igen senere.
 
