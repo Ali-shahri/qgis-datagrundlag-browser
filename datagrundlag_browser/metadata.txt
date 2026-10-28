@@ -1,0 +1,18 @@
+[general]
+name=Datagrundlag Browser
+qgisMinimumVersion=3.28
+description=Search and add Danish public base data from datagrundlag.dk as layers – latest snapshot or data as of a given date.
+about=Unofficial browser for datagrundlag.dk, an open catalogue of Danish public base data (BBR, Matriklen, DAR, GeoDanmark, Plandata.dk, GeoFA, nature and environment data and more) published as GeoParquet and FlatGeobuf with a STAC catalogue. The plugin adds a panel where you can search all datasets, add the latest snapshot with a double-click, load data as it looked on a given date, and refresh all layers to the latest snapshot with one click. The user interface is in Danish. Tables without geometry are read as GeoParquet and require GDAL with the Parquet driver (e.g. OSGeo4W, QGIS 3.34+). Not affiliated with datagrundlag.dk or MapCentia.
+version=0.1.0
+author=Ali Shahri
+email=262398616+Ali-shahri@users.noreply.github.com
+homepage=https://github.com/Ali-shahri/qgis-datagrundlag-browser
+tracker=https://github.com/Ali-shahri/qgis-datagrundlag-browser/issues
+repository=https://github.com/Ali-shahri/qgis-datagrundlag-browser
+changelog=
+    0.1.0 - Første udgivelse: søg i kataloget, tilføj nyeste snapshot eller data på en dato, opdatér alle lag til nyeste.
+tags=denmark,danish,open data,stac,geoparquet,flatgeobuf,bbr,matrikel,geodanmark,plandata,geofa
+category=Web
+icon=icon.png
+experimental=True
+deprecated=False
