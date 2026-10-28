@@ -2,7 +2,7 @@
 
 Søg i 553 danske grunddata-datasæt fra [datagrundlag.dk](https://datagrundlag.dk/) og få dem ind på kortet – med farver og symboler, du kender.
 
-![Datagrundlag Browser i QGIS](docs/demo.gif)
+![Datagrundlag Browser i QGIS](docs/screenshot.png)
 
 *English: An unofficial QGIS plugin for [datagrundlag.dk](https://datagrundlag.dk/), an open catalogue of Danish public base data (BBR, Matriklen, GeoDanmark, Plandata.dk, GeoFA, nature and environment data). Search, add layers with ready-made styles, add starter packs, load only the current map extent, or go back in time. The user interface is in Danish.*
 
@@ -20,7 +20,7 @@ Søg i 553 danske grunddata-datasæt fra [datagrundlag.dk](https://datagrundlag.
 - **Favoritter og senest tilføjet** – dine mest brugte datasæt står øverst.
 - **Ingen login, ingen API-nøgler** – og QGIS fryser ikke, mens kataloget hentes.
 
-![Startpakker](docs/startpakker.png)
+![Sådan virker det](docs/demo.gif)
 
 ## Installation
 

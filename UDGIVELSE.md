@@ -1,25 +1,8 @@
-# Tjekliste: udgiv på plugins.qgis.org
+# Tjekliste: ny version på plugins.qgis.org
 
-## Før første udgivelse
-
-- [x] Offentligt GitHub-repo: https://github.com/Ali-shahri/qgis-datagrundlag-browser
-- [x] Links, forfatter og e-mail er udfyldt i `metadata.txt`.
-- [x] De tre links i `metadata.txt` virker.
-
-## Byg og upload
-
-1. Kør `python make_zip.py` fra repoets rod. ZIP-filen lægges i `dist/`.
-2. Installér ZIP-filen i din egen QGIS og afprøv den en sidste gang.
-3. Log ind på https://plugins.qgis.org/ med en OSGeo-konto (opret en, hvis du ikke har en).
-4. Vælg **Upload a plugin** og upload ZIP-filen.
-5. Vent på godkendelse. Det kan tage fra få minutter til nogle dage (uploads i weekenden bliver typisk godkendt om mandagen).
-
-## Når den er afprøvet af andre
-
-- Sæt `experimental=False` i `metadata.txt`, så pluginet kan findes uden at slå eksperimentelle plugins til.
-
-## Ved hver ny version
-
-- [ ] Hæv `version=` i `metadata.txt` (fx 0.1.0 → 0.2.0).
-- [ ] Tilføj en linje øverst under `changelog=`.
-- [ ] Kør `python make_zip.py` og upload den nye ZIP-fil.
+1. Hæv `version=` i `datagrundlag_browser/metadata.txt`, og tilføj en linje øverst under `changelog=`.
+2. Kør `python make_zip.py` fra repoets rod. ZIP-filen lægges i `dist/`.
+3. Installér ZIP-filen i din egen QGIS og afprøv den.
+4. Log ind på https://plugins.qgis.org/, åbn pluginet (ID 6770), klik **Add version** og upload ZIP-filen.
+5. Tjek, at **Security Scan** og **Qt6 Check** er grønne.
+6. Lav en release på GitHub med samme versionsnummer (fx `v1.1.3`) ud fra `main`, og vedhæft ZIP-filen.
