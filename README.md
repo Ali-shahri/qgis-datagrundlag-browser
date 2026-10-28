@@ -12,6 +12,9 @@ Søg i og tilføj danske grunddata fra [datagrundlag.dk](https://datagrundlag.dk
 - **Tilføj nyeste data** med et dobbeltklik. Lagnavnet viser snapshot-datoen.
 - **Gå tilbage i tid:** hent data, som de så ud på en bestemt dato (nyeste snapshot på eller før datoen).
 - **Opdatér alle lag** til nyeste snapshot med ét klik. Lag, der er låst til en dato, bliver ikke ændret.
+- **Gruppér efter kilde eller tema** (fx Natur og miljø, Planer, Ejendomme).
+- **Favoritter og "Senest tilføjet"** øverst i listen. De huskes mellem QGIS-sessioner.
+- **Højreklik** på et datasæt for at kopiere id eller fil-URL eller åbne det på datagrundlag.dk.
 
 ## Installation
 

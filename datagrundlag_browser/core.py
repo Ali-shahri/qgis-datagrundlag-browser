@@ -106,6 +106,32 @@ SOURCE_LABELS = {
 }
 
 
+# Tema-visning: hvilke kilder hører til hvilket emne
+THEMES = [
+    ("Ejendomme, adresser og virksomheder", ("bbr", "dar", "matrikel", "cvr")),
+    ("Natur og miljø", ("naturdatabasen", "danmarksarealinformation", "puls")),
+    ("Jord og grundvand", ("dkjord", "geus", "grukos")),
+    ("Planer", ("plandatadk",)),
+    ("Kort, grænser og stednavne", ("geodanmark", "dagi", "stednavne")),
+    ("Kyst og hav", ("kystatlas", "redningsnumre")),
+    ("Landbrug", ("landbrugsdrift", "jordbrugsanalyser")),
+    ("Kulturarv", ("kulturarvsstyrelsen",)),
+    ("Veje og trafik", ("vejdirektoratet",)),
+    ("Kommunale fagdata (GeoFA)", ("geofa",)),
+]
+_THEME_OF = {s: name for name, schemas in THEMES for s in schemas}
+
+
+def theme_label(collection_id):
+    return _THEME_OF.get(collection_id.split(".", 1)[0], "Andet")
+
+
+def website_url(collection_id):
+    """Datasættets side på datagrundlag.dk."""
+    schema, rel = collection_id.split(".", 1)
+    return f"https://datagrundlag.dk/data/{schema}/{rel}/"
+
+
 def source_label(collection_id):
     schema = collection_id.split(".", 1)[0]
     return SOURCE_LABELS.get(schema, schema)
