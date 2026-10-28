@@ -1,6 +1,7 @@
 [general]
 name=Datagrundlag Browser
 qgisMinimumVersion=3.28
+qgisMaximumVersion=4.99
 description=Search 553 Danish public base datasets from datagrundlag.dk (BBR, Matriklen, GeoDanmark, Plandata.dk, GeoFA, nature and environment data) and add them to the map with ready-made styles.
 about=Datagrundlag Browser giver dig nem adgang til 553 datasæt med danske grunddata fra datagrundlag.dk – fx BBR, Matriklen, DAR, GeoDanmark, Plandata.dk, GeoFA, Naturdatabasen, jordforurening og grundvand.
     <br><br>
@@ -17,13 +18,14 @@ about=Datagrundlag Browser giver dig nem adgang til 553 datasæt med danske grun
     Der kræves ingen login eller API-nøgle. Data er åbne filer (FlatGeobuf og GeoParquet) i en offentlig S3-bucket. Datasæt, der kun findes som GeoParquet, kræver QGIS med Parquet-understøttelse (fx QGIS 3.34+ fra OSGeo4W). Pluginet er uofficielt og ikke tilknyttet datagrundlag.dk eller MapCentia. Hver datakilde har sine egne vilkår.
     <br><br>
     English: Unofficial browser for datagrundlag.dk – search 553 Danish public base datasets and add them to the map with sensible, official-looking styles. User interface in Danish.
-version=1.1.2
+version=1.1.3
 author=Ali Shahri
 email=alikamand16@yahoo.dk
 homepage=https://github.com/Ali-shahri/qgis-datagrundlag-browser
 tracker=https://github.com/Ali-shahri/qgis-datagrundlag-browser/issues
 repository=https://github.com/Ali-shahri/qgis-datagrundlag-browser
 changelog=
+    1.1.3 - Metadata: QGIS 4-understøttelse angives nu med qgisMaximumVersion=4.99.
     1.1.2 - Fuld Qt6/QGIS 4-kompatibilitet (bestået QGIS' Qt6-tjek).
     1.1.1 - Rettet fejl ved "Gruppér efter tema". Mindre punkter for BBR-bygninger, så tætte byområder kan læses.
     1.1.0 - Startpakker kan nu hentes for kun dit kortudsnit (pilen ved knappen eller højreklik).
@@ -37,4 +39,3 @@ category=Web
 icon=icon.png
 experimental=False
 deprecated=False
-supportsQt6=True
