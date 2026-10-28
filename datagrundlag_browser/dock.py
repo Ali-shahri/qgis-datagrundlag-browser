@@ -71,7 +71,7 @@ class DatagrundlagDock(QDockWidget):
 
     def _busy(self, on):
         if on:
-            QApplication.setOverrideCursor(Qt.WaitCursor)
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         else:
             QApplication.restoreOverrideCursor()
 
@@ -89,7 +89,7 @@ class DatagrundlagDock(QDockWidget):
         self.lst.clear()
         for cid, title in datasets:
             it = QListWidgetItem(f"{title}  [{cid}]" if title else cid)
-            it.setData(Qt.UserRole, (cid, title))
+            it.setData(Qt.ItemDataRole.UserRole, (cid, title))
             it.setToolTip(cid)
             self.lst.addItem(it)
         self._loaded = True
@@ -107,7 +107,7 @@ class DatagrundlagDock(QDockWidget):
         if not sel:
             self.status.setText("Vælg et datasæt først")
             return
-        cid, title = sel[0].data(Qt.UserRole)
+        cid, title = sel[0].data(Qt.ItemDataRole.UserRole)
         d = self.date.date().toString("yyyy-MM-dd") if self.hist.isChecked() else None
         self.status.setText(f"Tilføjer {cid} …")
         QApplication.processEvents()
@@ -117,7 +117,7 @@ class DatagrundlagDock(QDockWidget):
             self.status.setText(f"Tilføjet: {lyr.name()}")
         except Exception as e:  # noqa: BLE001
             self.status.setText(str(e))
-            self.iface.messageBar().pushMessage("Datagrundlag Browser", str(e), level=Qgis.Warning)
+            self.iface.messageBar().pushMessage("Datagrundlag Browser", str(e), level=Qgis.MessageLevel.Warning)
         finally:
             self._busy(False)
 

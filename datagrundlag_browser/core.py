@@ -17,15 +17,13 @@ DATE_PROP = "datagrundlag/pinned_date"   # tom = følg nyeste
 
 
 def _default_fetch(url):
-    """Hent JSON. I QGIS bruges QGIS' netværk (respekterer proxy-indstillinger)."""
-    try:
-        from qgis.core import QgsNetworkAccessManager
-        from qgis.PyQt.QtCore import QUrl
-        from qgis.PyQt.QtNetwork import QNetworkRequest
-    except ImportError:
-        import urllib.request
-        with urllib.request.urlopen(url, timeout=60) as r:
-            return json.loads(r.read().decode("utf-8"))
+    """Hent JSON via QGIS' netværk (respekterer QGIS' proxy-indstillinger)."""
+    from qgis.core import QgsNetworkAccessManager
+    from qgis.PyQt.QtCore import QUrl
+    from qgis.PyQt.QtNetwork import QNetworkRequest
+
+    if not url.startswith("https://"):
+        raise ValueError(f"Kun https-adresser er tilladt: {url}")
     reply = QgsNetworkAccessManager.instance().blockingGet(QNetworkRequest(QUrl(url)))
     if reply.error():
         raise IOError(f"{url}: {reply.errorString()}")
@@ -66,7 +64,7 @@ def resolve(collection_id, date=None, fetch=_default_fetch):
         assets, snap = meta["assets"], meta["snapshot_date"]
     else:
         coll = fetch(d + "collection.json")
-        items = [l["href"] for l in coll["links"] if l.get("rel") == "item"]
+        items = [lnk["href"] for lnk in coll["links"] if lnk.get("rel") == "item"]
         dated = sorted((h.split("_gc2_snapshot_date=")[1].split("/")[0], h) for h in items)
         valid = [x for x in dated if x[0] <= date]
         if not valid:
