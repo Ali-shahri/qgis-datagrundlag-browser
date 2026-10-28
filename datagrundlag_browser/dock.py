@@ -376,7 +376,7 @@ class DatagrundlagDock(QDockWidget):
         for cid, _t in self._datasets:
             groups[group_of(cid)].append(cid)
         if theme_mode:
-            order = [name for name, _s, _c in core.THEMES if name in groups]
+            order = [t[0] for t in core.THEMES if t[0] in groups]
             order += sorted(k for k in groups if k not in order)
         else:
             order = sorted(groups, key=str.lower)
