@@ -3,8 +3,8 @@
 ## Før første udgivelse
 
 - [x] Offentligt GitHub-repo: https://github.com/Ali-shahri/qgis-datagrundlag-browser
-- [x] Links, forfatter og e-mail (GitHub noreply) er udfyldt i `metadata.txt`.
-- [ ] Tjek, at de tre links i `metadata.txt` virker i en browser.
+- [x] Links, forfatter og e-mail er udfyldt i `metadata.txt`.
+- [x] De tre links i `metadata.txt` virker.
 
 ## Byg og upload
 
